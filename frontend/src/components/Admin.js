@@ -222,22 +222,6 @@ const handleRiskSubmit = async (e) => {
   }
 };
 
-const handleRiskUpdate = async (riskId, updatedRisk) => {
-  setMessage('');
-  setError('');
-  setIsSubmitting(true);
-  
-  try {
-    await api.put(`/api/risks/${riskId}`, updatedRisk);
-    await refreshData();
-    showSuccessMessage('Risk updated successfully');
-  } catch (err) {
-    handleError(err);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
 const handleRiskDelete = async (riskId) => {
   if (!window.confirm('Are you sure you want to delete this risk?')) return;
   
@@ -277,22 +261,6 @@ const handleProjectSubmit = async (e) => {
     });
     
     showSuccessMessage('Project added successfully');
-  } catch (err) {
-    handleError(err);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-const handleProjectUpdate = async (projectId, updatedProject) => {
-  setMessage('');
-  setError('');
-  setIsSubmitting(true);
-  
-  try {
-    await api.put(`/api/projects/${projectId}`, updatedProject);
-    await refreshData();
-    showSuccessMessage('Project updated successfully');
   } catch (err) {
     handleError(err);
   } finally {
