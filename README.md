@@ -1,6 +1,6 @@
 # Cybether
 
-A comprehensive Cybersecurity Governance, Risk, and Compliance (GRC) dashboard designed to help organizations monitor and manage their cybersecurity posture effectively.
+A Cybersecurity Governance, Risk, and Compliance (GRC) dashboard designed to help you monitor and manage your cybersecurity posture.
 
 ## Prerequisites
 
