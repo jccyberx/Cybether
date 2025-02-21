@@ -222,6 +222,22 @@ const handleRiskSubmit = async (e) => {
   }
 };
 
+const handleRiskUpdate = async (riskId, updatedRisk) => {
+  setMessage('');
+  setError('');
+  setIsSubmitting(true);
+  
+  try {
+    await api.put(`/api/risks/${riskId}`, updatedRisk);
+    await refreshData();
+    showSuccessMessage('Risk updated successfully');
+  } catch (err) {
+    handleError(err);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 const handleRiskDelete = async (riskId) => {
   if (!window.confirm('Are you sure you want to delete this risk?')) return;
   
@@ -261,6 +277,22 @@ const handleProjectSubmit = async (e) => {
     });
     
     showSuccessMessage('Project added successfully');
+  } catch (err) {
+    handleError(err);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+const handleProjectUpdate = async (projectId, updatedProject) => {
+  setMessage('');
+  setError('');
+  setIsSubmitting(true);
+  
+  try {
+    await api.put(`/api/projects/${projectId}`, updatedProject);
+    await refreshData();
+    showSuccessMessage('Project updated successfully');
   } catch (err) {
     handleError(err);
   } finally {
@@ -722,30 +754,61 @@ return (
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {risks.map((risk) => (
-                      <tr key={risk.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">{risk.title}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            ${risk.severity === 'Critical' ? 'bg-red-100 text-red-800' :
-                              risk.severity === 'High' ? 'bg-orange-100 text-orange-800' :
-                              risk.severity === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-green-100 text-green-800'}`}>
-                            {risk.severity}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">{risk.status}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => handleRiskDelete(risk.id)}
-                            disabled={isSubmitting}
-                            className="text-red-600 hover:text-red-900 ml-4 disabled:opacity-50"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                  {risks.map((risk) => (
+                    <tr key={risk.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                            value={risk.title}
+                            onChange={(e) => {
+                              const updatedRisk = { ...risk, title: e.target.value };
+                              handleRiskUpdate(risk.id, updatedRisk);
+                            }}
+                          />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <select
+                          value={risk.severity}
+                          onChange={(e) => {
+                            const updatedRisk = { ...risk, severity: e.target.value };
+                            handleRiskUpdate(risk.id, updatedRisk);
+                          }}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        >
+                          <option value="Low">Low</option>
+                          <option value="Medium">Medium</option>
+                          <option value="High">High</option>
+                          <option value="Critical">Critical</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <select
+                          value={risk.status}
+                          onChange={(e) => {
+                            const updatedRisk = { ...risk, status: e.target.value };
+                            handleRiskUpdate(risk.id, updatedRisk);
+                          }}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        >
+                          <option value="Open">Open</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="Closed">Closed</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleRiskDelete(risk.id)}
+                          disabled={isSubmitting}
+                          className="text-red-600 hover:text-red-900 ml-4 disabled:opacity-50"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>
@@ -850,41 +913,72 @@ return (
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {projects.map((project) => (
-                      <tr key={project.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">{project.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            ${project.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                              project.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
-                              project.status === 'On Hold' ? 'bg-yellow-100 text-yellow-800' :
-                              'bg-gray-100 text-gray-800'}`}>
-                            {project.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="w-full bg-gray-200 rounded-full h-2.5 mr-4">
-                            <div
-                              className="bg-blue-600 h-2.5 rounded-full"
-                              style={{ width: `${project.completion_percentage}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-xs text-gray-500">{project.completion_percentage}%</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {formatDate(project.due_date)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => handleProjectDelete(project.id)}
-                            disabled={isSubmitting}
-                            className="text-red-600 hover:text-red-900 ml-4 disabled:opacity-50"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                  {projects.map((project) => (
+                    <tr key={project.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="text"
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          value={project.name}
+                          onChange={(e) => {
+                            const updatedProject = { ...project, name: e.target.value };
+                            handleProjectUpdate(project.id, updatedProject);
+                          }}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <select
+                          value={project.status}
+                          onChange={(e) => {
+                            const updatedProject = { ...project, status: e.target.value };
+                            handleProjectUpdate(project.id, updatedProject);
+                          }}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                        >
+                          <option value="Not Started">Not Started</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="Completed">Completed</option>
+                          <option value="On Hold">On Hold</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          value={project.completion_percentage}
+                          onChange={(e) => {
+                            const updatedProject = {
+                              ...project,
+                              completion_percentage: Math.min(100, Math.max(0, parseInt(e.target.value) || 0))
+                            };
+                            handleProjectUpdate(project.id, updatedProject);
+                          }}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="date"
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          value={formatDate(project.due_date)}
+                          onChange={(e) => {
+                            const updatedProject = { ...project, due_date: e.target.value };
+                            handleProjectUpdate(project.id, updatedProject);
+                          }}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={() => handleProjectDelete(project.id)}
+                          disabled={isSubmitting}
+                          className="text-red-600 hover:text-red-900 ml-4 disabled:opacity-50"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                   </tbody>
                 </table>
               </div>
