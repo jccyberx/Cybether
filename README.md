@@ -19,7 +19,7 @@ Visit http://localhost:3000 and login with:
 
 ## 📋 Overview
 
-Cybether is a comprehensive GRC dashboard that helps organizations monitor and manage their cybersecurity posture. It provides real-time insights into:
+Cybether is a GRC dashboard that helps organisations monitor and manage their cyber security posture. It provides real-time insights into:
 
 - 🛡️ Threat Level Monitoring
 - 📈 Maturity Rating Tracking
