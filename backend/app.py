@@ -194,6 +194,25 @@ def get_maturity_rating():
         logger.error(traceback.format_exc())
         return jsonify({'error': 'Error retrieving maturity rating'}), 500
     
+@app.route('/api/health')
+def health_check():
+    try:
+        # Check database connection with correct SQL syntax
+        from sqlalchemy import text
+        db.session.execute(text('SELECT 1'))
+        return jsonify({
+            'status': 'healthy',
+            'database': 'connected',
+            'timestamp': datetime.utcnow().isoformat()
+        }), 200
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }), 500
+    
 @app.route('/api/refresh-token', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh_token():
