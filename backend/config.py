@@ -3,7 +3,7 @@ from datetime import timedelta
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@db:5432/grc_dashboard')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://cybether:cybether_password@db:5432/grc_dashboard')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # JWT Configuration
