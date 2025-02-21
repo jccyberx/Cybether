@@ -107,4 +107,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 For support or inquiries:
 - Contact: Jean Carlos (JC)
 - LinkedIn: [Connect with JC](https://www.linkedin.com/in/jeanpc/)
-- Issues: [GitHub Issues](https://github.com/wandanti/cybether/issues)
+- Issues: [GitHub Issues](https://github.com/jccyberx/Cybether/issues)
