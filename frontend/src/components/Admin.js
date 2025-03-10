@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 
-const SUPPORTED_FRAMEWORKS = ['PCI DSS', 'NIST CSF', 'ISO 27001', 'SOC 2'];
+// Updated to include NCSC CAF and Cyber Essentials
+const SUPPORTED_FRAMEWORKS = ['PCI DSS', 'NIST CSF', 'ISO 27001', 'SOC 2', 'NCSC CAF', 'Cyber Essentials'];
 
 const Admin = () => {
   const navigate = useNavigate();

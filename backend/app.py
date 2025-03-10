@@ -13,7 +13,7 @@ import os
 from sqlalchemy import Case, desc
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.DEBUG,  # Set to DEBUG for more info
     format='%(asctime)s [%(levelname)s] - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout)
@@ -24,16 +24,8 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config.from_object(Config)
 
-CORS(app, 
-     resources={
-         r"/api/*": {
-             "origins": os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(','),
-             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-             "allow_headers": ["Content-Type", "Authorization"],
-             "supports_credentials": True,
-             "expose_headers": ["Content-Range", "X-Content-Range"]
-         }
-     })
+# Apply CORS globally with simplified configuration
+CORS(app, origins=["*"], supports_credentials=True)
 
 def admin_required():
     def wrapper(fn):
@@ -52,15 +44,14 @@ def admin_required():
         return decorator
     return wrapper
 
+# Simple CORS headers for all responses
 @app.after_request
 def after_request(response):
-    allowed_origins = os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(',')
-    origin = request.headers.get('Origin')
-    if origin in allowed_origins:
-        response.headers.add('Access-Control-Allow-Origin', origin)
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Max-Age', '3600')
+    logger.debug(f"Response headers: {dict(response.headers)}")
     return response
 
 jwt = JWTManager(app)
@@ -75,8 +66,19 @@ with app.app_context():
         logger.error(f"Error creating database tables: {str(e)}")
         logger.error(traceback.format_exc())
 
-@app.route('/api/login', methods=['POST'])
+# Basic OPTIONS request handler for all routes
+@app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
+@app.route('/<path:path>', methods=['OPTIONS'])
+def options_handler(path):
+    return jsonify({}), 200
+
+@app.route('/api/login', methods=['POST', 'OPTIONS'])
 def login():
+    # Handle preflight requests for the login endpoint
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        return response
+        
     logger.info("Processing login request")
     try:
         data = request.get_json()
@@ -88,8 +90,8 @@ def login():
             return jsonify({'error': 'Invalid credentials'}), 401
         
         if bcrypt.checkpw(data['password'].encode('utf-8'), user.password_hash.encode('utf-8')):
-            access_token = create_access_token(identity=str(user.id))  # Convert user.id to string
-            refresh_token = create_refresh_token(identity=str(user.id))  # Create refresh token
+            access_token = create_access_token(identity=str(user.id))
+            refresh_token = create_refresh_token(identity=str(user.id))
             logger.info(f"Login successful for user: {user.username}")
             return jsonify({
                 'token': access_token,
@@ -197,9 +199,10 @@ def get_maturity_rating():
 @app.route('/api/health')
 def health_check():
     try:
-        # Check database connection with correct SQL syntax
+        # Check database connection
         from sqlalchemy import text
         db.session.execute(text('SELECT 1'))
+        logger.info("Health check passed")
         return jsonify({
             'status': 'healthy',
             'database': 'connected',

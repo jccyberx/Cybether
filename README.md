@@ -17,6 +17,51 @@ Visit http://localhost:3000 and login with:
 - Username: `admin`
 - Password: `admin123`
 
+## 🌐 Deploying with Custom Hostname
+
+To deploy Cybether with a custom hostname:
+
+```bash
+# Deploy with hostname
+./deploy.sh --hostname example.com
+```
+
+For local development with a hostname:
+
+```bash
+# On macOS
+sudo ./macOS-setup-hosts.sh cybether.local
+./deploy.sh --hostname cybether.local
+```
+
+Then access Cybether at http://cybether.local:3000
+
+## 🔒 Changing the Default Password
+
+For security, you should change the default admin password after first login. You can do this in two ways:
+
+### Option 1: Using the Password Reset Script
+
+```bash
+# Make sure you have Python and required packages installed
+pip install bcrypt psycopg2-binary python-dotenv
+
+# Run the reset script
+python reset_password.py
+```
+
+Follow the prompts to change the admin password.
+
+### Option 2: Through the Database
+
+```bash
+# Connect to the database container
+docker exec -it cybether-db psql -U postgres -d grc_dashboard
+
+# Update the password (replace 'your-hashed-password' with the actual bcrypt hash)
+UPDATE "user" SET password_hash = 'your-hashed-password' WHERE username = 'admin';
+```
+
 ## 📋 Overview
 
 Cybether is a GRC dashboard that helps organisations monitor and manage their cyber security posture. It provides real-time insights into:
@@ -39,6 +84,8 @@ Cybether is a GRC dashboard that helps organisations monitor and manage their cy
   - NIST CSF
   - ISO 27001
   - SOC 2
+  - NCSC CAF
+  - Cyber Essentials
 
 ### Administration
 Access the admin interface at http://localhost:3000/admin to:
@@ -71,6 +118,12 @@ cd cybether
 ./deploy.sh --clean
 ```
 
+### Installation With Custom Hostname
+```bash
+# Deploy with hostname support
+./deploy.sh --hostname your-hostname.com
+```
+
 ### Manual Installation
 ```bash
 # Build and start containers
@@ -78,13 +131,12 @@ docker compose up --build
 
 # Stop containers
 docker compose down
-
 ```
 
 ## 🔍 Verification
 
 After installation, verify that:
-1. Frontend is accessible at http://localhost:3000
+1. Frontend is accessible at http://localhost:3000 (or your custom hostname)
 2. You can log in with admin credentials
 3. All dashboard components are loading
 4. Admin functions are working

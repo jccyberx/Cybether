@@ -12,7 +12,7 @@ services:
     depends_on:
       - backend
     networks:
-      - cybether-network
+      - cybether-net
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost:3000"]
@@ -36,13 +36,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=grc_dashboard
-      - CORS_ORIGINS=http://localhost:3000
-      - LOG_LEVEL=INFO
+      - CORS_ORIGINS=http://localhost:3000,http://localhost
+      - LOG_LEVEL=DEBUG
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - cybether-network
+      - cybether-net
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
@@ -67,7 +67,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - cybether-network
+      - cybether-net
     restart: unless-stopped
 
 volumes:
@@ -75,6 +75,5 @@ volumes:
     name: cybether-postgres-data
 
 networks:
-  cybether-network:
-    name: cybether-network
+  cybether-net:
     driver: bridge
