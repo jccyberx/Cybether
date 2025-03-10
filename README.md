@@ -152,7 +152,7 @@ All components are containerised using Docker for easy deployment and scaling.
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## 📞 Support
 
