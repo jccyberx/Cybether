@@ -85,7 +85,7 @@ const Dashboard = () => {
     try {
       const response = await api.get('/api/compliance');
       // Filter only supported frameworks
-      const supportedFrameworks = ['PCI DSS', 'NIST CSF', 'ISO 27001', 'SOC 2'];
+      const supportedFrameworks = ['PCI DSS', 'NIST CSF', 'ISO 27001', 'SOC 2', 'NCSC CAF', 'Cyber Essentials'];
       const filteredCompliance = response.data.filter(
         framework => supportedFrameworks.includes(framework.name)
       );
@@ -150,23 +150,26 @@ const Dashboard = () => {
     return <MinusIcon className="h-5 w-5 text-gray-500" />;
   };
 
+  // Updated chart colors for all frameworks
+  const getFrameworkColor = (frameworkName, alpha = 0.8) => {
+    const colors = {
+      'PCI DSS': `rgba(54, 162, 235, ${alpha})`,
+      'NIST CSF': `rgba(75, 192, 192, ${alpha})`,
+      'ISO 27001': `rgba(153, 102, 255, ${alpha})`,
+      'SOC 2': `rgba(255, 159, 64, ${alpha})`,
+      'NCSC CAF': `rgba(255, 99, 132, ${alpha})`,
+      'Cyber Essentials': `rgba(46, 204, 113, ${alpha})`
+    };
+    return colors[frameworkName] || `rgba(128, 128, 128, ${alpha})`;
+  };
+
   // Chart data for compliance
   const complianceChartData = {
     labels: compliance.map(f => f.name),
     datasets: [{
       data: compliance.map(f => f.current_score),
-      backgroundColor: [
-        'rgba(54, 162, 235, 0.8)',  // PCI DSS
-        'rgba(75, 192, 192, 0.8)',  // NIST CSF
-        'rgba(153, 102, 255, 0.8)', // ISO 27001
-        'rgba(255, 159, 64, 0.8)'   // SOC 2
-      ],
-      borderColor: [
-        'rgba(54, 162, 235, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)'
-      ],
+      backgroundColor: compliance.map(f => getFrameworkColor(f.name)),
+      borderColor: compliance.map(f => getFrameworkColor(f.name, 1)),
       borderWidth: 1
     }]
   };
