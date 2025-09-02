@@ -31,5 +31,11 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s \
     CMD wget --quiet --tries=1 --spider http://localhost:3000 || exit 1
 
+# Create non-root user and switch to it
+RUN apk add --no-cache shadow && \
+    useradd -U -u 1000 appuser && \
+    chown -R 1000:1000 /usr/share/nginx/html
+USER 1000
+
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
