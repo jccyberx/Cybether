@@ -157,7 +157,7 @@ All components run in Docker containers for consistency across environments.
 ## Recent Updates
 
 - **Frontend Migration:** Migrated from Create React App to Vite 5.4.6 for better build performance and smaller bundle sizes
-- **Security Improvements:** Updated all dependencies to latest stable versions, reducing vulnerabilities from 19 to 2 moderate issues
+- **Security Improvements:** Updated all dependencies to the latest stable versions, reducing vulnerabilities
 - **Base Images:** Updated to Node.js 22-alpine and Python 3.12-slim for improved performance
 - **Better ESM Support:** All config files now use ESM modules for consistency
 
