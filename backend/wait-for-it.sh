@@ -1,16 +1,18 @@
-#!/bin/bash
+#!/bin/sh
 
+# POSIX-compatible wait-for-postgres script
 host="$1"
 port="$2"
 shift 2
-cmd="$@"
+
+# Remaining args are the command to run
 
 # Maximum number of attempts
 max_attempts=30
 attempt=1
 
-until pg_isready -h "$host" -p "$port" -U "postgres" >/dev/null 2>&1; do
-    if [ $attempt -ge $max_attempts ]; then
+while ! pg_isready -h "$host" -p "$port" -U "postgres" >/dev/null 2>&1; do
+    if [ "$attempt" -ge "$max_attempts" ]; then
         echo "Could not connect to Postgres after $max_attempts attempts. Starting anyway..."
         break
     fi
@@ -18,5 +20,5 @@ until pg_isready -h "$host" -p "$port" -U "postgres" >/dev/null 2>&1; do
     sleep 2
 done
 
-# Execute the command
-exec $cmd
+# Execute the provided command
+exec "$@"
