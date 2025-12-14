@@ -17,10 +17,6 @@ Visit http://localhost:3000 and login with:
 - **Username:** `admin`
 - **Password:** `admin123`
 
-## Dashboard Overview
-
-The dashboard gives you an at-a-glance view of your security metrics including threat levels, maturity ratings, active risks, and compliance framework progress.
-
 ## Deploying with Custom Hostname
 
 If you want to run Cybether on a custom hostname (like cybether.local):
