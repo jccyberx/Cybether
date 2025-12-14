@@ -1,8 +1,8 @@
-Flask==3.0.0
+Flask==3.1.2
 Flask-SQLAlchemy==3.1.1
-Flask-Migrate==4.0.5
-Flask-Cors==6.0.0
-Flask-JWT-Extended==4.6.0
-psycopg2-binary==2.9.9
-python-dotenv==1.0.0
-bcrypt==4.0.1
+Flask-Migrate==4.1.0
+Flask-Cors==6.0.1
+Flask-JWT-Extended==4.7.0
+psycopg2-binary==2.9.10
+python-dotenv==1.0.1
+bcrypt==4.1.3
