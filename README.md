@@ -1,162 +1,197 @@
 # Cybether
 
-A modern, open-source Cybersecurity Governance, Risk, and Compliance (GRC) dashboard.
+A clean, open-source Cybersecurity Governance, Risk, and Compliance (GRC) dashboard built to give you real-time visibility into your security posture.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/jccyberx/Cybether.git
-cd cybether
+cd Cybether
 
 # Start the application
 ./deploy.sh
 ```
 
 Visit http://localhost:3000 and login with:
-- Username: `admin`
-- Password: `admin123`
+- **Username:** `admin`
+- **Password:** `admin123`
 
-## 🌐 Deploying with Custom Hostname
+## Dashboard Overview
 
-To deploy Cybether with a custom hostname:
+Here's what Cybether looks like in action:
+
+The dashboard gives you an at-a-glance view of your security metrics including threat levels, maturity ratings, active risks, and compliance framework progress.
+
+## Deploying with Custom Hostname
+
+If you want to run Cybether on a custom hostname (like cybether.local):
 
 ```bash
 # Deploy with hostname
 ./deploy.sh --hostname example.com
 ```
 
-For local development with a hostname:
+For local development on macOS:
 
 ```bash
-# On macOS
 sudo ./macOS-setup-hosts.sh cybether.local
 ./deploy.sh --hostname cybether.local
 ```
 
-Then access Cybether at http://cybether.local:3000
+Then access it at http://cybether.local:3000
 
-## 🔒 Changing the Default Password
+## Changing the Default Password
 
-For security, you should change the default admin password after first login. You can do this in two ways:
+After your first login, change the default admin password for security. You can do this in two ways:
 
-### Option 1: Using the Password Reset Script
+### Using the Password Reset Script
 
 ```bash
-# Make sure you have Python and required packages installed
+# Install required packages if you haven't already
 pip install bcrypt psycopg2-binary python-dotenv
 
 # Run the reset script
 python reset_password.py
 ```
 
-Follow the prompts to change the admin password.
+Follow the prompts to set a new password.
 
-### Option 2: Through the Database
+### Through the Database
 
 ```bash
 # Connect to the database container
 docker exec -it cybether-db psql -U postgres -d grc_dashboard
 
-# Update the password (replace 'your-hashed-password' with the actual bcrypt hash)
+# Update the password (replace 'your-hashed-password' with an actual bcrypt hash)
 UPDATE "user" SET password_hash = 'your-hashed-password' WHERE username = 'admin';
 ```
 
-## 📋 Overview
+## What's Inside
 
-Cybether is a GRC dashboard that helps organisations monitor and manage their cyber security posture. It provides real-time insights into:
+Cybether tracks the key areas that matter for your security governance:
 
-- 🛡️ Threat Level Monitoring
-- 📈 Maturity Rating Tracking
-- ⚠️ Risk Management
-- 📊 Project Progress
-- ✅ Compliance Framework Status
-
-## 🛠️ Features
-
-### Dashboard
-- **Real-time Threat Monitoring**: Track and assess current threat levels
-- **Maturity Tracking**: Monitor security maturity with trend analysis
-- **Risk Overview**: Visualize and manage security risks
-- **Project Management**: Track security initiatives
-- **Compliance Status**: Monitor major framework compliance
+- **Threat Levels** - Monitor current threat landscape
+- **Maturity Ratings** - Track your security maturity over time with trend analysis
+- **Risk Management** - Log and manage identified security risks with severity levels
+- **Security Projects** - Track initiatives and projects with progress tracking
+- **Compliance Frameworks** - Monitor compliance against major standards:
   - PCI DSS
-  - NIST CSF
+  - NIST Cybersecurity Framework
   - ISO 27001
   - SOC 2
   - NCSC CAF
   - Cyber Essentials
 
-### Administration
-Access the admin interface at http://localhost:3000/admin to:
-- Update threat levels
-- Manage maturity ratings and trends
-- Handle risk assessments
-- Update project status
-- Track compliance progress
+## Features
 
-## 🔧 Prerequisites
+### Dashboard View
+- Real-time threat level display
+- Security maturity score with historical trends
+- Risk overview with severity breakdown
+- Active projects and completion tracking
+- Compliance framework status across multiple standards
+
+### Admin Panel
+Access the admin interface at http://localhost:3000/admin to:
+- Update threat levels and descriptions
+- Manage maturity ratings and add trend data
+- Create and manage security risks
+- Track and update project status
+- Update compliance framework scores and assessments
+
+## Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
 - [Git](https://git-scm.com/downloads)
 
-## 📦 Installation
+## Installation
 
-### Standard Installation
+### Standard Install
+
 ```bash
 # Clone the repository
 git clone https://github.com/jccyberx/Cybether.git
-cd cybether
+cd Cybether
 
-# Start the application
+# Start everything
 ./deploy.sh
 ```
 
-### Clean Installation
+### Fresh Install (Clean Database)
+
 ```bash
-# For a fresh start (removes existing data)
+# Removes existing data and starts fresh
 ./deploy.sh --clean
 ```
 
-### Installation With Custom Hostname
+### Custom Hostname Install
+
 ```bash
-# Deploy with hostname support
-./deploy.sh --hostname your-hostname.com
+# Deploy with a custom hostname
+./deploy.sh --hostname your-domain.com
 ```
 
-### Manual Installation
+### Manual Docker Setup
+
 ```bash
-# Build and start containers
+# Build and start all containers
 docker compose up --build
 
 # Stop containers
 docker compose down
 ```
 
-## 🔍 Verification
+## Verify Installation
 
-After installation, verify that:
-1. Frontend is accessible at http://localhost:3000 (or your custom hostname)
-2. You can log in with admin credentials
-3. All dashboard components are loading
-4. Admin functions are working
+After startup, check that:
+1. Frontend loads at http://localhost:3000 (or your custom hostname)
+2. You can log in with the default admin credentials
+3. Dashboard displays with all components visible
+4. Admin panel is accessible and functional
 
-## 🏗️ Architecture
+## Architecture
 
-Cybether uses a modern three-tier architecture:
-- **Frontend**: React with Tailwind CSS
-- **Backend**: Python Flask REST API
-- **Database**: PostgreSQL
+Cybether is built with a straightforward three-tier architecture:
 
-All components are containerised using Docker for easy deployment and scaling.
+- **Frontend:** React 18.3.1 with Vite 5.4.6, Tailwind CSS for styling
+- **Backend:** Python Flask REST API with JWT authentication
+- **Database:** PostgreSQL with SQLAlchemy ORM
 
-## 📜 License
+All components run in Docker containers for consistency across environments.
 
-This project is licensed under the MIT License.
+## Recent Updates
 
-## 📞 Support
+- **Frontend Migration:** Migrated from Create React App to Vite 5.4.6 for better build performance and smaller bundle sizes
+- **Security Improvements:** Updated all dependencies to latest stable versions, reducing vulnerabilities from 19 to 2 moderate issues
+- **Base Images:** Updated to Node.js 22-alpine and Python 3.12-slim for improved performance
+- **Better ESM Support:** All config files now use ESM modules for consistency
 
-For support or inquiries:
-- Contact: Jean Carlos (JC)
-- LinkedIn: [Connect with JC](https://www.linkedin.com/in/jeanpc/)
-- Issues: [GitHub Issues](https://github.com/jccyberx/Cybether/issues)
+## Tech Stack
+
+**Frontend:**
+- React 18.3.1
+- Vite 5.4.6 (build tool)
+- Tailwind CSS 3.4.13
+- Chart.js 4.4.6 (dashboards & graphs)
+- React Router 6.28.0
+- Axios 1.7.7 (API client)
+
+**Backend:**
+- Flask 3.1.2
+- Flask-SQLAlchemy 3.1.1
+- Flask-JWT-Extended 4.7.0
+- bcrypt 4.1.3 (password hashing)
+
+**Database:**
+- PostgreSQL 14
+
+## License
+
+MIT License - feel free to use and modify as needed.
+
+## Get in Touch
+
+Questions or need help?
+- LinkedIn: [Connect with me](https://www.linkedin.com/in/jeanpc/)
+- GitHub Issues: [Report bugs or request features](https://github.com/jccyberx/Cybether/issues)
