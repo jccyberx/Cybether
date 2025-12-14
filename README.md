@@ -19,8 +19,6 @@ Visit http://localhost:3000 and login with:
 
 ## Dashboard Overview
 
-Here's what Cybether looks like in action:
-
 The dashboard gives you an at-a-glance view of your security metrics including threat levels, maturity ratings, active risks, and compliance framework progress.
 
 ## Deploying with Custom Hostname
